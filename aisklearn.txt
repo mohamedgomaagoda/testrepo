@@ -1,0 +1,31 @@
+import pandas as pd
+import matplotlib.pyplot as plt 
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+
+
+df=pd.read_csv("C:\\Users\\ALMOHAMDY\\Downloads\\diabetes.csv")
+df.head
+df.info()
+df.describe()
+df["Age"].hist()
+plt.show()
+scaler = StandardScaler()
+columns=["Pregnancies","Glucose","BloodPressure","Age"]
+df[columns]=scaler.fit_transform(df[columns])
+
+x=df["Outcome"]
+y=df.drop(["Outcome","Insulin"],axis=1)
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.33, random_state=42)
+clf = RandomForestClassifier(n_estimators=100)
+clf.fit(y_train, x_train)
+classifier=clf.predict(y_test)
+accuracy_score(x_test,classifier)
+
+neigh = KNeighborsClassifier(n_neighbors=10)
+neigh.fit(y_train, x_train)
+knn=neigh.predict(y_test)
+accuracy_score(x_test,knn)
